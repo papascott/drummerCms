@@ -1,31 +1,38 @@
-var myVersion = "0.4.7", myProductName = "drummerCms";    
+var myVersion = "0.4.7", myProductName = "drummerCms";
 
-const fs = require ("fs");  
-const request = require ("request");  
+const fs = require ("fs");
+const request = require ("request");
 const utils = require ("daveutils");
-const davehttp = require ("davehttp");  
-const opml = require ("opml"); 
+const davehttp = require ("davehttp");
+const opml = require ("opml");
 const oldschool = require ("oldschoolblog");
+require('dotenv').config({ path: '.env' });
 
 var config = {
-	port: process.env.PORT || 1410,
-	flLogToConsole: true,
-	flAllowAccessFromAnywhere: true,
-	defaultDescription: "",
-	defaultHeaderImage: "http://scripting.com/images/2021/08/02/joeDiMaggio.png",
-	defaultCopyright: "",
-	defaultTemplate: "http://scripting.com/code/drummercms/template/index.html",
-	appDomain: "oldschool.scripting.com", //10/12/21 by DW
-	s3BasePath: "/oldschool.scripting.com/", //10/12/21 by DW
-	s3BaseUrl:  "http://oldschool.scripting.com/", //10/12/21 by DW
-	specialOutlines: { //9/4/21 by DW
-		changenotes: {
-			urlBlogOpml: "http://drummer.scripting.com/davewiner/drummer/changeNotes.opml",
-			basePath: "/scripting.com/drummer/blog/",
-			baseUrl: "http://scripting.com/drummer/blog/"
-			}
-		}
-	};
+  port: process.env.PORT || 1410,
+  flLogToConsole: true,
+  flAllowAccessFromAnywhere: true,
+  defaultDescription: "",
+  defaultHeaderImage: "http://scripting.com/images/2021/08/02/joeDiMaggio.png",
+  defaultCopyright: "",
+  defaultTemplate: "http://scripting.com/code/drummercms/template/index.html",
+  appDomain: "oldschool.scripting.com", //10/12/21 by DW
+  s3BasePath: "/oldschool.scripting.com/", //10/12/21 by DW
+  s3BaseUrl: "http://oldschool.scripting.com/", //10/12/21 by DW
+  specialOutlines: {
+    //9/4/21 by DW
+    changenotes: {
+      urlBlogOpml: "http://drummer.scripting.com/davewiner/drummer/changeNotes.opml",
+      basePath: "/scripting.com/drummer/blog/",
+      baseUrl: "http://scripting.com/drummer/blog/",
+    },
+    ScottHansonDE: {
+      urlBlogOpml: "http://drummer.scripting.com/ScottHansonDE/blog.opml",
+      basePath: "/drummer.papascott.de/",
+      baseUrl: "http://drummer.papascott.de/",
+    },
+  },
+};
 var oldSchoolConfig = {
 	flHttpEnabled: false
 	};
@@ -42,7 +49,7 @@ function httpRequest (url, timeout, headers, callback) {
 				callback ({message});
 				}
 			else {
-				callback (undefined, data) 
+				callback (undefined, data)
 				}
 			}
 		});
@@ -71,16 +78,16 @@ function initBlogConfig (blogName, urlOpml, basePath, baseUrl, theOutline, callb
 	var urlHomePageTemplate = getValueFromOpmlHead ("urlHomePageTemplate", undefined);
 	var urlGlossary = getValueFromOpmlHead ("urlGlossary", undefined);
 	var timeZoneOffset = getValueFromOpmlHead ("timeZoneOffset", undefined); //10/13/21 by DW
-	
+
 	baseUrl = getValueFromOpmlHead ("urlBlogWebsite", baseUrl); //10/13/21 by DW
 	if (!utils.endsWith (baseUrl, "/")) { //10/14/21 by DW
 		baseUrl += "/";
 		}
-	
+
 	var flOldSchoolUseCache = getValueFromOpmlHead ("flOldSchoolUseCache", false);
 	if (theConfig === undefined) {
 		oldschoolConfig.blogs [blogName] = {
-			basePath,   
+			basePath,
 			basePathItems: basePath + "items/",
 			baseUrl, //10/12/21 by DW
 			title,
@@ -162,7 +169,7 @@ function oldschoolBuild (blogName, callback) {
 		basePath = config.s3BasePath + blogName + "/"; //10/12/21 by DW
 		baseUrl = config.s3BaseUrl + blogName + "/"; //10/12/21 by DW
 		}
-	
+
 	getBlogOutline (urlBlogOpml, function (err, theOutline) {
 		if (err) {
 			const message = "Can't build the blog for \"" + blogName + "\" because blog.opml doesn't exist in Drummer, or is private.";
@@ -185,7 +192,7 @@ function oldschoolBuild (blogName, callback) {
 			}
 		});
 	}
-function handleHttpRequest (theRequest) { 
+function handleHttpRequest (theRequest) {
 	const params = theRequest.params;
 	function returnNotFound () {
 		theRequest.httpReturn (404, "text/plain", "Not found.");
@@ -230,7 +237,7 @@ function handleHttpRequest (theRequest) {
 		}
 	return (false);
 	}
-function readConfig (fname, config, callback) { 
+function readConfig (fname, config, callback) {
 	utils.sureFilePath (fname, function () {
 		fs.readFile (fname, function (err, data) {
 			if (!err) {

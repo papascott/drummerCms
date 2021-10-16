@@ -14,6 +14,7 @@
 	"dependencies": {
 		"davehttp": "^0.4.33",
 		"daveutils": "^0.4.63",
+		"dotenv": "^10.0.0",
 		"oldschoolblog": "^0.6.26",
 		"opml": "^0.4.9",
 		"request": "^2.88.2"
