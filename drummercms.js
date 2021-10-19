@@ -27,7 +27,7 @@ var config = {
       baseUrl: "http://scripting.com/drummer/blog/",
     },
     ScottHansonDE: {
-      urlBlogOpml: "http://drummer.scripting.com/ScottHansonDE/blog.opml",
+      urlBlogOpml: "http://drummer.scripting.com/ScottHansonDE/papascott-de.opml",
       basePath: "/drummer.papascott.de/",
       baseUrl: "http://drummer.papascott.de/",
     },
